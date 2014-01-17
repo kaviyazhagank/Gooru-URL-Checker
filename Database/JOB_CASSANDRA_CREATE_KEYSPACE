@@ -1,0 +1,26 @@
+CREATE KEYSPACE gooru;
+USE gooru;
+
+CREATE TABLE resource_status (
+  KEY text PRIMARY KEY,
+  last_updated text,
+  indexing_done text,
+  url_status text,
+  url text
+) WITH
+  comment='' AND
+  comparator=text AND
+  read_repair_chance=0.100000 AND
+  gc_grace_seconds=864000 AND
+  default_validation=text AND
+  min_compaction_threshold=4 AND
+  max_compaction_threshold=32 AND
+  replicate_on_write='true' AND
+  compaction_strategy_class='SizeTieredCompactionStrategy' AND
+  compression_parameters:sstable_compression='SnappyCompressor';
+
+CREATE INDEX last_updated ON resource_status (last_updated);
+
+CREATE INDEX indexing_done ON resource_status (indexing_done);
+
+CREATE INDEX url_status ON resource_status (url_status);
