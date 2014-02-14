@@ -24,11 +24,8 @@
 
 package org.ednovo.gooru.service;
 
-import java.io.IOException;
 import java.util.concurrent.RecursiveAction;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ednovo.gooru.controller.ResourceCassandraRestController;
 import org.ednovo.gooru.model.DomainList;
@@ -55,26 +52,6 @@ public class JobsRecurssiveAction extends RecursiveAction {
         this.high= high;
         this.resourceCassandraService = resourceCassandraService;
     }
-    
-    void doLeft(int l, int h) throws JsonParseException, JsonMappingException, IOException {
-    	ObjectMapper mapper =null;
-    	for (int i = l; i < h; ++i) 
-     		{
-    			mapper = new ObjectMapper();
-    			DomainList domainList = null;
-    			domainList = mapper.readValue(resourceCassandraService.getRedisValue(domainsList[i]), DomainList.class);
-    			if(domainList != null) {
-    				resourceCassandraService.deleteKey(domainsList[i]);
-    				int totalResources = domainList.getResourceCount();
-    				int totalCheckedResources = domainList.getTotalChecked();
-    				if(totalResources == totalCheckedResources){
-    					resourceCassandraService.resetDomainList(domainList);
-    				}
-    				resourceCassandraService.stautsCheckerUrl(domainList);
-			 	logger.info("domainList Domain :{} :: resourceCount:{}",domainList.getDomainName(),domainList.getResourceCount());
-        	}
-     	}
-   }
     
    @Override
    protected void compute() {
